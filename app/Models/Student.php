@@ -13,5 +13,6 @@ class Student extends Model
         'firstname',
         'lastname',
         'email',
+        'image'
     ];
 }

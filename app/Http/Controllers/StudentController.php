@@ -33,9 +33,22 @@ class StudentController extends Controller
         $request->validate([
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'email' => 'required|email'
+            'email' => 'required|email',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4056'
         ]);
-        Student::create($request->all());
+        // Prepare data
+        $data = $request->only(['firstname', 'lastname', 'email']);
+
+        // Image Uploading
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $data['image'] = $imageName; //Add Image to the Data Array
+        }
+
+        // Store the data in the database
+        Student::create($data);
+        // Student::create($request->all());
         // Second Method
         // Student::create([
         //     'name' => $request->firstname,
@@ -51,8 +64,12 @@ class StudentController extends Controller
     public function show(string $id)
     {
         //Show a Single Record
-        $student = Student::findOrFail($id);
-        return view('students.show', compact('student'));
+        $student = Student::find($id);
+        if ($student) {
+            return view('students.show', compact('student'));
+        } else {
+            return redirect('/students')->with('status', 'Student Not Found!');
+        }
     }
 
     /**
@@ -61,8 +78,12 @@ class StudentController extends Controller
     public function edit(string $id)
     {
         //Show the Single Record in Form
-        $student = Student::findOrFail($id);
-        return view('students.edit', compact('student'));
+        $student = Student::find($id);
+        if ($student) {
+            return view('students.edit', compact('student'));
+        } else {
+            return redirect('/students')->with('status', 'Student Not Found!');
+        }
     }
 
     /**
@@ -76,8 +97,21 @@ class StudentController extends Controller
             'lastname' => 'required|string|max:255',
             'email' => 'required|email'
         ]);
+
+        // dd($request->all());
         $student = Student::findOrFail($id);
-        $student->update($request->all());
+        if ($request->hasFile('image')) {
+            unlink(public_path('images/' . $student->image));
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $student->image = $imageName;
+        }
+
+        $student->firstname = $request->firstname;
+        $student->lastname = $request->lastname;
+        $student->email = $request->email;
+        $student->save();
+        // $student->update($request->all());
         return redirect('/students')->with('status', 'Student Updated Successfully!');
     }
 

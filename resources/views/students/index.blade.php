@@ -12,7 +12,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4>
-                            Students Lits
+                            Students List
                             <a href="{{ route('students.create') }}" class="btn btn-primary float-end">
                                 Add Student
                             </a>
@@ -26,6 +26,7 @@
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Email</th>
+                                    <th>Image</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -36,6 +37,10 @@
                                         <td>{{ $student->firstname }}</td>
                                         <td>{{ $student->lastname }}</td>
                                         <td>{{ $student->email }}</td>
+                                        <td>
+                                            <img src="{{ asset('images/' . $student->image) }}" alt="User Image"
+                                                width="45" height="45">
+                                        </td>
                                         <td style="display: flex; justify-content:start;align-items:flex-start; gap: 8px;">
                                             <a href="{{ route('students.edit', $student->id) }}"
                                                 class="btn btn-primary">Edit</a>

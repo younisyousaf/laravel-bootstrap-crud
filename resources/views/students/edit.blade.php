@@ -11,7 +11,8 @@
                         </h4>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('students.update', $student->id) }}" method="POST">
+                        <form action="{{ route('students.update', $student->id) }}" method="POST"
+                            enctype="multipart/form-data">
                             @method('PUT')
                             @csrf
                             <div class="form-group">
@@ -37,6 +38,18 @@
                                 <input type="email" name="email" id="email" class="form-control"
                                     value="{{ $student->email }}">
                                 @error('email')
+                                    <span class="text-danger">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="image">Image</label>
+                                <input type="file" name="image" id="image" class="form-control"
+                                    value="{{ $student->image }}">
+                                <img src="{{ asset('images/' . $student->image) }}" alt="User Image" width="45"
+                                    height="45">
+                                @error('image')
                                     <span class="text-danger">
                                         {{ $message }}
                                     </span>

@@ -11,7 +11,7 @@
                         </h4>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('students.store') }}" method="post">
+                        <form action="{{ route('students.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="firstname">Firstname</label>
@@ -33,6 +33,15 @@
                                 <label for="email">Email</label>
                                 <input type="email" name="email" id="email" class="form-control">
                                 @error('email')
+                                    <span class="text-danger">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="image">Image</label>
+                                <input type="file" name="image" id="image" class="form-control">
+                                @error('image')
                                     <span class="text-danger">
                                         {{ $message }}
                                     </span>
